@@ -1,0 +1,33 @@
+# config_holdpose.yaml: ส่วนที่ apply_holdpose.sh ใส่ลงใน config.yaml ของสำเนา (งาน 3.7) ฉบับสมบูรณ์
+# (ไฟล์นี้ไว้อ่าน/อ้างอิง สคริปต์ apply จะแทรกข้อความเดียวกันนี้ให้)
+#
+# จุดที่ 1: ใต้ FSM: _: ต่อจาก Handover (ไม่ใช่บรรทัดแรก: state แรก = Passive = state เริ่มต้น)
+#     HoldPose:
+#       id: 5
+#   ไม่ต้องใส่ type เพราะชื่อ state = ชื่อ class หลังตัด "State_" (HoldPose → State_HoldPose)
+#
+# จุดที่ 2: ใต้ FSM: Passive: transitions:
+#     HoldPose: LT + down.on_pressed
+#   LT + up = FixStand อยู่แล้ว LT + down ยังว่าง · เงื่อนไขของ Passive เรียงตามชื่อ: FixStand < Handover < HoldPose
+#
+# จุดที่ 3: บล็อกใหม่ (ระดับเดียวกับ Passive:, FixStand:)
+FSM:
+  HoldPose:
+    transitions:
+      Passive: LT + B.on_pressed          # ทางออกฉุกเฉินเหมือนทุก state (+ คีย์ p ใน sim จาก main.cpp)
+    ramp_s: 1.0                           # H7: kp ไล่จาก 0 → เต็มใน 1 s (ลบบรรทัดนี้ = เต็มทันที)
+    # gain ตอนเทรน (BeyondMimic) เรียงตาม slot 0..28 · slot ที่ไม่มีข้อต่อ (13,14,20,21,27,28) = 0
+    kp: [
+      40.2, 99.1, 40.2, 99.1, 28.5, 28.5,
+      40.2, 99.1, 40.2, 99.1, 28.5, 28.5,
+      40.2, 0, 0,
+      14.3, 14.3, 14.3, 14.3, 14.3, 0, 0,
+      14.3, 14.3, 14.3, 14.3, 14.3, 0, 0,
+    ]
+    kd: [
+      2.6, 6.3, 2.6, 6.3, 1.8, 1.8,
+      2.6, 6.3, 2.6, 6.3, 1.8, 1.8,
+      2.6, 0, 0,
+      0.9, 0.9, 0.9, 0.9, 0.9, 0, 0,
+      0.9, 0.9, 0.9, 0.9, 0.9, 0, 0,
+    ]

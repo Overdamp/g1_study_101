@@ -1,0 +1,9 @@
+sim/build/
+__pycache__/
+*.csv
+# ผลรัน/ข้อมูลที่สร้างใหม่ได้ (log เทรน, checkpoint, dump)
+logs/
+*.pt
+*.onnx
+*.npz
+CLAUDE.local.md
